@@ -1,35 +1,46 @@
 // California High-Speed Rail Data Visualization Charts
-// Using D3.js v7
+// FiveThirtyEight-style D3.js visualizations
 
 document.addEventListener('DOMContentLoaded', function() {
-    createCostChart();
-    createTimelineChart();
-    createContractorChart();
-    createRouteMap();
+    // Smooth load animations
+    setTimeout(() => {
+        createCostChart();
+        createTimelineChart();
+        createContractorChart();
+        createRouteMap();
+    }, 100);
 });
 
-// Color palette
+// 538-style color palette
 const colors = {
-    primary: '#ED1C24',
-    secondary: '#0066CC',
-    success: '#28A745',
-    warning: '#FFC107',
-    danger: '#DC3545',
-    gray: '#666666',
-    lightGray: '#E5E5E5'
+    red: '#ED1C24',
+    orange: '#F26522',
+    redLight: 'rgba(237, 28, 36, 0.12)',
+    success: '#2ECC71',
+    warning: '#F39C12',
+    blue: '#3498DB',
+    textPrimary: '#222222',
+    textSecondary: '#555555',
+    textMuted: '#888888',
+    gridline: '#ECECEC',
+    border: '#E8E8E8'
 };
+
+// Font styling - 538 uses clean sans-serif
+const fontFamily = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
 
 // Cost Evolution Chart
 function createCostChart() {
     const container = d3.select('#cost-chart');
+    if (container.empty()) return;
+    
     const containerWidth = container.node().getBoundingClientRect().width;
     
-    const margin = {top: 40, right: 40, bottom: 60, left: 80};
-    const width = containerWidth - margin.left - margin.right - 40;
-    const height = 400 - margin.top - margin.bottom;
+    const margin = {top: 50, right: 120, bottom: 50, left: 60};
+    const width = Math.min(containerWidth, 740) - margin.left - margin.right;
+    const height = 380 - margin.top - margin.bottom;
     
-    // Clear previous
-    container.selectAll('svg').remove();
+    container.selectAll('*').remove();
     
     const svg = container.append('svg')
         .attr('width', width + margin.left + margin.right)
@@ -39,58 +50,75 @@ function createCostChart() {
 
     // Data: Cost estimates over time (Phase 1)
     const data = [
-        {year: 2008, low: 33, high: 33, label: 'Prop 1A Estimate', source: 'Proposition 1A ballot'},
-        {year: 2009, low: 42.6, high: 42.6, label: '2009 Business Plan', source: '2009 CHSRA Business Plan'},
-        {year: 2011, low: 65.4, high: 65.4, label: '2011 Business Plan', source: '2011 CHSRA Business Plan'},
-        {year: 2012, low: 68.4, high: 68.4, label: '2012 Business Plan', source: '2012 CHSRA Business Plan'},
-        {year: 2014, low: 67.6, high: 67.6, label: '2014 Business Plan', source: '2014 CHSRA Business Plan'},
-        {year: 2016, low: 64.2, high: 64.2, label: '2016 Business Plan', source: '2016 CHSRA Business Plan'},
-        {year: 2018, low: 77.3, high: 77.3, label: '2018 Business Plan', source: '2018 CHSRA Business Plan'},
-        {year: 2020, low: 80.3, high: 80.3, label: '2020 Business Plan', source: '2020 CHSRA Business Plan'},
-        {year: 2022, low: 88.5, high: 105, label: '2022 Business Plan', source: '2022 CHSRA Business Plan'},
-        {year: 2024, low: 89, high: 128, label: '2024 Business Plan', source: '2024 CHSRA Business Plan'}
+        {year: 2008, low: 33, high: 33, label: 'Prop 1A'},
+        {year: 2009, low: 42.6, high: 42.6, label: '2009 Plan'},
+        {year: 2011, low: 65.4, high: 65.4, label: '2011 Plan'},
+        {year: 2012, low: 68.4, high: 68.4, label: '2012 Plan'},
+        {year: 2014, low: 67.6, high: 67.6, label: '2014 Plan'},
+        {year: 2016, low: 64.2, high: 64.2, label: '2016 Plan'},
+        {year: 2018, low: 77.3, high: 77.3, label: '2018 Plan'},
+        {year: 2020, low: 80.3, high: 80.3, label: '2020 Plan'},
+        {year: 2022, low: 88.5, high: 105, label: '2022 Plan'},
+        {year: 2024, low: 89, high: 128, label: '2024 Plan'}
     ];
 
     // Scales
     const x = d3.scaleLinear()
-        .domain([2007, 2025])
+        .domain([2007, 2026])
         .range([0, width]);
 
     const y = d3.scaleLinear()
-        .domain([0, 140])
+        .domain([0, 145])
         .range([height, 0]);
 
-    // Grid lines
+    // Very subtle gridlines - 538 style
     svg.append('g')
         .attr('class', 'grid')
         .selectAll('line')
-        .data(y.ticks(7))
+        .data([0, 25, 50, 75, 100, 125])
         .join('line')
         .attr('x1', 0)
         .attr('x2', width)
         .attr('y1', d => y(d))
         .attr('y2', d => y(d))
-        .attr('stroke', colors.lightGray)
-        .attr('stroke-dasharray', '3,3');
+        .attr('stroke', colors.gridline)
+        .attr('stroke-width', 1);
 
-    // Original estimate line
+    // Y-axis labels (minimal)
+    svg.selectAll('.y-label')
+        .data([0, 50, 100])
+        .join('text')
+        .attr('x', -8)
+        .attr('y', d => y(d))
+        .attr('dy', '0.35em')
+        .attr('text-anchor', 'end')
+        .attr('font-family', fontFamily)
+        .attr('font-size', '11px')
+        .attr('font-weight', '500')
+        .attr('fill', colors.textMuted)
+        .text(d => '$' + d + 'B');
+
+    // Original estimate annotation line
     svg.append('line')
-        .attr('x1', 0)
-        .attr('x2', width)
+        .attr('x1', x(2008))
+        .attr('x2', width + 20)
         .attr('y1', y(33))
         .attr('y2', y(33))
         .attr('stroke', colors.success)
-        .attr('stroke-width', 2)
-        .attr('stroke-dasharray', '8,4');
+        .attr('stroke-width', 1.5)
+        .attr('stroke-dasharray', '6,4')
+        .attr('opacity', 0.7);
 
+    // Direct annotation on chart - 538 style
     svg.append('text')
-        .attr('x', width - 5)
-        .attr('y', y(33) - 8)
-        .attr('text-anchor', 'end')
-        .attr('font-size', '12px')
+        .attr('x', width + 25)
+        .attr('y', y(33))
+        .attr('dy', '0.35em')
+        .attr('font-family', fontFamily)
+        .attr('font-size', '11px')
+        .attr('font-weight', '600')
         .attr('fill', colors.success)
-        .attr('font-family', 'Roboto Mono')
-        .text('Original Voter-Approved: $33B');
+        .text('$33B original');
 
     // Area for range (2022+)
     const areaData = data.filter(d => d.high !== d.low);
@@ -102,24 +130,34 @@ function createCostChart() {
 
     svg.append('path')
         .datum(areaData)
-        .attr('fill', colors.primary)
-        .attr('fill-opacity', 0.2)
+        .attr('fill', colors.redLight)
         .attr('d', area);
 
-    // Line - high
-    const lineHigh = d3.line()
+    // Main line
+    const line = d3.line()
         .x(d => x(d.year))
         .y(d => y(d.high))
         .curve(d3.curveMonotoneX);
 
-    svg.append('path')
+    // Animate the line
+    const path = svg.append('path')
         .datum(data)
         .attr('fill', 'none')
-        .attr('stroke', colors.primary)
-        .attr('stroke-width', 3)
-        .attr('d', lineHigh);
+        .attr('stroke', colors.red)
+        .attr('stroke-width', 2.5)
+        .attr('stroke-linecap', 'round')
+        .attr('d', line);
+    
+    const pathLength = path.node().getTotalLength();
+    path
+        .attr('stroke-dasharray', pathLength)
+        .attr('stroke-dashoffset', pathLength)
+        .transition()
+        .duration(1500)
+        .ease(d3.easeQuadOut)
+        .attr('stroke-dashoffset', 0);
 
-    // Line - low (only where different)
+    // Low estimate line (dashed, only where different)
     const lineLow = d3.line()
         .x(d => x(d.year))
         .y(d => y(d.low))
@@ -128,68 +166,127 @@ function createCostChart() {
     svg.append('path')
         .datum(data.filter(d => d.year >= 2022))
         .attr('fill', 'none')
-        .attr('stroke', colors.primary)
-        .attr('stroke-width', 2)
-        .attr('stroke-dasharray', '5,3')
+        .attr('stroke', colors.red)
+        .attr('stroke-width', 1.5)
+        .attr('stroke-dasharray', '4,4')
+        .attr('opacity', 0.5)
         .attr('d', lineLow);
 
-    // Data points
+    // Key data points only - less cluttered
+    const keyPoints = data.filter(d => [2008, 2012, 2018, 2024].includes(d.year));
+    
     svg.selectAll('.data-point')
-        .data(data)
+        .data(keyPoints)
         .join('circle')
         .attr('class', 'data-point')
         .attr('cx', d => x(d.year))
         .attr('cy', d => y(d.high))
-        .attr('r', 6)
-        .attr('fill', colors.primary)
-        .attr('stroke', 'white')
+        .attr('r', 0)
+        .attr('fill', colors.red)
+        .attr('stroke', '#fff')
         .attr('stroke-width', 2)
-        .style('cursor', 'pointer')
-        .on('mouseover', function(event, d) {
-            showTooltip(event, `${d.year}: $${d.low === d.high ? d.high + 'B' : d.low + 'B - $' + d.high + 'B'}<br>${d.label}`);
-        })
-        .on('mouseout', hideTooltip);
+        .transition()
+        .delay((d, i) => 1500 + i * 100)
+        .duration(300)
+        .attr('r', 5);
 
-    // Axes
-    svg.append('g')
-        .attr('transform', `translate(0,${height})`)
-        .call(d3.axisBottom(x).tickFormat(d3.format('d')).ticks(9))
-        .call(g => g.select('.domain').attr('stroke', colors.lightGray));
+    // Direct value annotations on chart - 538 signature style
+    // Starting point
+    svg.append('text')
+        .attr('x', x(2008))
+        .attr('y', y(33) + 20)
+        .attr('text-anchor', 'middle')
+        .attr('font-family', fontFamily)
+        .attr('font-size', '13px')
+        .attr('font-weight', '700')
+        .attr('fill', colors.textPrimary)
+        .text('$33B')
+        .attr('opacity', 0)
+        .transition()
+        .delay(1600)
+        .duration(300)
+        .attr('opacity', 1);
 
-    svg.append('g')
-        .call(d3.axisLeft(y).tickFormat(d => '$' + d + 'B'))
-        .call(g => g.select('.domain').attr('stroke', colors.lightGray));
-
-    // Annotations
+    // End point - the big number
     svg.append('text')
         .attr('x', x(2024))
         .attr('y', y(128) - 15)
         .attr('text-anchor', 'middle')
-        .attr('font-size', '14px')
-        .attr('font-weight', 'bold')
-        .attr('fill', colors.primary)
-        .text('$128B');
+        .attr('font-family', fontFamily)
+        .attr('font-size', '18px')
+        .attr('font-weight', '800')
+        .attr('fill', colors.red)
+        .text('$128B')
+        .attr('opacity', 0)
+        .transition()
+        .delay(1900)
+        .duration(400)
+        .attr('opacity', 1);
 
+    // Growth annotation
     svg.append('text')
-        .attr('x', x(2008))
-        .attr('y', y(33) + 25)
+        .attr('x', x(2024))
+        .attr('y', y(128) - 35)
         .attr('text-anchor', 'middle')
-        .attr('font-size', '14px')
-        .attr('font-weight', 'bold')
-        .attr('fill', colors.gray)
-        .text('$33B');
+        .attr('font-family', fontFamily)
+        .attr('font-size', '11px')
+        .attr('font-weight', '600')
+        .attr('fill', colors.textMuted)
+        .text('+287%')
+        .attr('opacity', 0)
+        .transition()
+        .delay(2100)
+        .duration(300)
+        .attr('opacity', 1);
+
+    // Year axis (minimal)
+    svg.append('g')
+        .attr('transform', `translate(0,${height + 15})`)
+        .selectAll('text')
+        .data([2008, 2012, 2016, 2020, 2024])
+        .join('text')
+        .attr('x', d => x(d))
+        .attr('text-anchor', 'middle')
+        .attr('font-family', fontFamily)
+        .attr('font-size', '11px')
+        .attr('font-weight', '500')
+        .attr('fill', colors.textMuted)
+        .text(d => d);
+
+    // Tooltips for all points
+    svg.selectAll('.hover-area')
+        .data(data)
+        .join('circle')
+        .attr('class', 'hover-area')
+        .attr('cx', d => x(d.year))
+        .attr('cy', d => y(d.high))
+        .attr('r', 15)
+        .attr('fill', 'transparent')
+        .style('cursor', 'pointer')
+        .on('mouseover', function(event, d) {
+            const value = d.low === d.high ? `$${d.high}B` : `$${d.low}B – $${d.high}B`;
+            showTooltip(event, `<strong>${d.year}</strong><br>${value}`);
+        })
+        .on('mouseout', hideTooltip);
+
+    // Source citation - small, gray, below chart
+    container.append('div')
+        .attr('class', 'chart-source')
+        .html('Source: CHSRA Business Plans 2008-2024');
 }
 
 // Timeline Chart
 function createTimelineChart() {
     const container = d3.select('#timeline-chart');
+    if (container.empty()) return;
+    
     const containerWidth = container.node().getBoundingClientRect().width;
     
-    const margin = {top: 40, right: 40, bottom: 60, left: 120};
-    const width = containerWidth - margin.left - margin.right - 40;
-    const height = 350 - margin.top - margin.bottom;
+    const margin = {top: 40, right: 80, bottom: 40, left: 90};
+    const width = Math.min(containerWidth, 740) - margin.left - margin.right;
+    const height = 320 - margin.top - margin.bottom;
     
-    container.selectAll('svg').remove();
+    container.selectAll('*').remove();
     
     const svg = container.append('svg')
         .attr('width', width + margin.left + margin.right)
@@ -197,128 +294,161 @@ function createTimelineChart() {
         .append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    // Data: When each business plan said completion would happen
     const data = [
-        {plan: '2008 Plan', projected: 2020, label: 'Original Promise'},
-        {plan: '2012 Plan', projected: 2029, label: 'SF-LA Service'},
-        {plan: '2016 Plan', projected: 2029, label: 'Phase 1 Blended'},
-        {plan: '2018 Plan', projected: 2033, label: 'SF-LA Service'},
-        {plan: '2020 Plan', projected: 2033, label: 'SF-LA Service'},
-        {plan: '2024 Plan', projected: 2033, label: 'IOS Only (Merced-Bakersfield)'},
+        {plan: '2008', projected: 2020, label: 'Original promise'},
+        {plan: '2012', projected: 2029, label: 'Revised'},
+        {plan: '2018', projected: 2033, label: 'Delayed again'},
+        {plan: '2024', projected: 2033, label: 'Central Valley only'}
     ];
 
     // Scales
     const y = d3.scaleBand()
         .domain(data.map(d => d.plan))
         .range([0, height])
-        .padding(0.3);
+        .padding(0.35);
 
     const x = d3.scaleLinear()
-        .domain([2008, 2040])
+        .domain([2005, 2038])
         .range([0, width]);
 
-    // Grid
+    // Subtle gridlines
     svg.append('g')
-        .attr('class', 'grid')
         .selectAll('line')
-        .data(x.ticks(8))
+        .data([2010, 2020, 2030])
         .join('line')
         .attr('x1', d => x(d))
         .attr('x2', d => x(d))
-        .attr('y1', 0)
+        .attr('y1', -10)
         .attr('y2', height)
-        .attr('stroke', colors.lightGray)
-        .attr('stroke-dasharray', '3,3');
+        .attr('stroke', colors.gridline)
+        .attr('stroke-width', 1);
 
-    // Original deadline line
+    // Original deadline annotation
     svg.append('line')
         .attr('x1', x(2020))
         .attr('x2', x(2020))
-        .attr('y1', 0)
-        .attr('y2', height)
+        .attr('y1', -25)
+        .attr('y2', height + 10)
         .attr('stroke', colors.success)
         .attr('stroke-width', 2)
-        .attr('stroke-dasharray', '8,4');
+        .attr('stroke-dasharray', '6,4');
 
     svg.append('text')
         .attr('x', x(2020))
-        .attr('y', -10)
+        .attr('y', -30)
         .attr('text-anchor', 'middle')
-        .attr('font-size', '11px')
+        .attr('font-family', fontFamily)
+        .attr('font-size', '10px')
+        .attr('font-weight', '600')
         .attr('fill', colors.success)
-        .attr('font-family', 'Roboto Mono')
-        .text('Original 2020 Target');
+        .text('2020 TARGET');
 
-    // Today line
+    // Today marker
     svg.append('line')
         .attr('x1', x(2026))
         .attr('x2', x(2026))
-        .attr('y1', 0)
-        .attr('y2', height)
-        .attr('stroke', colors.secondary)
+        .attr('y1', -10)
+        .attr('y2', height + 10)
+        .attr('stroke', colors.red)
         .attr('stroke-width', 2);
 
     svg.append('text')
         .attr('x', x(2026))
-        .attr('y', -10)
+        .attr('y', -15)
         .attr('text-anchor', 'middle')
-        .attr('font-size', '11px')
-        .attr('fill', colors.secondary)
-        .attr('font-family', 'Roboto Mono')
+        .attr('font-family', fontFamily)
+        .attr('font-size', '10px')
+        .attr('font-weight', '700')
+        .attr('fill', colors.red)
         .text('TODAY');
 
-    // Bars
+    // Bars with animation
     svg.selectAll('.bar')
         .data(data)
         .join('rect')
         .attr('class', 'bar chart-bar')
         .attr('y', d => y(d.plan))
-        .attr('x', d => x(2008))
-        .attr('width', d => x(d.projected) - x(2008))
+        .attr('x', x(2008))
+        .attr('width', 0)
         .attr('height', y.bandwidth())
-        .attr('fill', (d, i) => i === 0 ? colors.success : colors.primary)
-        .attr('rx', 4)
-        .on('mouseover', function(event, d) {
-            showTooltip(event, `${d.plan}: Projected ${d.projected}<br>${d.label}`);
-        })
-        .on('mouseout', hideTooltip);
+        .attr('fill', (d, i) => i === 0 ? colors.success : colors.red)
+        .attr('rx', 3)
+        .attr('opacity', (d, i) => i === 0 ? 0.8 : 0.85)
+        .transition()
+        .duration(800)
+        .delay((d, i) => i * 150)
+        .ease(d3.easeQuadOut)
+        .attr('width', d => x(d.projected) - x(2008));
 
     // Year labels on bars
     svg.selectAll('.year-label')
         .data(data)
         .join('text')
-        .attr('x', d => x(d.projected) - 5)
-        .attr('y', d => y(d.plan) + y.bandwidth()/2 + 5)
+        .attr('x', d => x(d.projected) - 8)
+        .attr('y', d => y(d.plan) + y.bandwidth()/2)
+        .attr('dy', '0.35em')
         .attr('text-anchor', 'end')
+        .attr('font-family', fontFamily)
         .attr('font-size', '13px')
-        .attr('font-weight', 'bold')
-        .attr('font-family', 'Roboto Mono')
+        .attr('font-weight', '700')
         .attr('fill', 'white')
-        .text(d => d.projected);
+        .text(d => d.projected)
+        .attr('opacity', 0)
+        .transition()
+        .delay((d, i) => 800 + i * 150)
+        .duration(300)
+        .attr('opacity', 1);
 
-    // Axes
-    svg.append('g')
-        .attr('transform', `translate(0,${height})`)
-        .call(d3.axisBottom(x).tickFormat(d3.format('d')).ticks(8))
-        .call(g => g.select('.domain').attr('stroke', colors.lightGray));
+    // Plan labels (left axis)
+    svg.selectAll('.plan-label')
+        .data(data)
+        .join('text')
+        .attr('x', -8)
+        .attr('y', d => y(d.plan) + y.bandwidth()/2)
+        .attr('dy', '0.35em')
+        .attr('text-anchor', 'end')
+        .attr('font-family', fontFamily)
+        .attr('font-size', '12px')
+        .attr('font-weight', '600')
+        .attr('fill', colors.textSecondary)
+        .text(d => d.plan + ' Plan');
 
-    svg.append('g')
-        .call(d3.axisLeft(y))
-        .call(g => g.select('.domain').remove())
-        .selectAll('text')
-        .attr('font-size', '12px');
+    // Direct annotations - 538 style
+    svg.selectAll('.plan-note')
+        .data(data)
+        .join('text')
+        .attr('x', d => x(d.projected) + 8)
+        .attr('y', d => y(d.plan) + y.bandwidth()/2)
+        .attr('dy', '0.35em')
+        .attr('font-family', fontFamily)
+        .attr('font-size', '10px')
+        .attr('font-weight', '500')
+        .attr('fill', colors.textMuted)
+        .text(d => d.label)
+        .attr('opacity', 0)
+        .transition()
+        .delay((d, i) => 1000 + i * 150)
+        .duration(300)
+        .attr('opacity', 1);
+
+    // Source
+    container.append('div')
+        .attr('class', 'chart-source')
+        .html('Source: CHSRA Business Plans');
 }
 
 // Contractor Chart
 function createContractorChart() {
     const container = d3.select('#contractor-chart');
+    if (container.empty()) return;
+    
     const containerWidth = container.node().getBoundingClientRect().width;
     
-    const margin = {top: 40, right: 40, bottom: 60, left: 100};
-    const width = containerWidth - margin.left - margin.right - 40;
-    const height = 300 - margin.top - margin.bottom;
+    const margin = {top: 30, right: 120, bottom: 40, left: 140};
+    const width = Math.min(containerWidth, 740) - margin.left - margin.right;
+    const height = 220 - margin.top - margin.bottom;
     
-    container.selectAll('svg').remove();
+    container.selectAll('*').remove();
     
     const svg = container.append('svg')
         .attr('width', width + margin.left + margin.right)
@@ -327,9 +457,9 @@ function createContractorChart() {
         .attr('transform', `translate(${margin.left},${margin.top})`);
 
     const data = [
-        {name: 'CP 1 (Tutor Perini)', original: 985, current: 3550, miles: 32},
-        {name: 'CP 2-3 (Dragados)', original: 1365, current: 1800, miles: 65},  // Estimated current
-        {name: 'CP 4 (Ferrovial)', original: 455, current: 500, miles: 22}  // Including utilities
+        {name: 'CP 1 (Tutor Perini)', original: 985, current: 3550, miles: '32 mi'},
+        {name: 'CP 2-3 (Dragados)', original: 1365, current: 1800, miles: '65 mi'},
+        {name: 'CP 4 (Ferrovial)', original: 455, current: 500, miles: '22 mi'}
     ];
 
     const y = d3.scaleBand()
@@ -341,111 +471,147 @@ function createContractorChart() {
         .domain([0, 4000])
         .range([0, width]);
 
-    // Grid
+    // Subtle gridlines
     svg.append('g')
-        .attr('class', 'grid')
         .selectAll('line')
-        .data(x.ticks(8))
+        .data([1000, 2000, 3000])
         .join('line')
         .attr('x1', d => x(d))
         .attr('x2', d => x(d))
-        .attr('y1', 0)
-        .attr('y2', height)
-        .attr('stroke', colors.lightGray)
-        .attr('stroke-dasharray', '3,3');
+        .attr('y1', -5)
+        .attr('y2', height + 5)
+        .attr('stroke', colors.gridline)
+        .attr('stroke-width', 1);
 
-    // Original bars
+    // Original bid bars (subtle)
     svg.selectAll('.bar-original')
         .data(data)
         .join('rect')
         .attr('class', 'bar-original')
-        .attr('y', d => y(d.name))
+        .attr('y', d => y(d.name) + y.bandwidth() * 0.1)
         .attr('x', 0)
-        .attr('width', d => x(d.original))
-        .attr('height', y.bandwidth() / 2)
-        .attr('fill', colors.secondary)
-        .attr('rx', 3);
+        .attr('width', 0)
+        .attr('height', y.bandwidth() * 0.35)
+        .attr('fill', colors.border)
+        .attr('rx', 2)
+        .transition()
+        .duration(600)
+        .delay((d, i) => i * 100)
+        .attr('width', d => x(d.original));
 
-    // Current bars
+    // Current value bars
     svg.selectAll('.bar-current')
         .data(data)
         .join('rect')
         .attr('class', 'bar-current chart-bar')
-        .attr('y', d => y(d.name) + y.bandwidth() / 2)
+        .attr('y', d => y(d.name) + y.bandwidth() * 0.55)
         .attr('x', 0)
-        .attr('width', d => x(d.current))
-        .attr('height', y.bandwidth() / 2)
-        .attr('fill', colors.primary)
-        .attr('rx', 3)
-        .on('mouseover', function(event, d) {
-            const growth = ((d.current - d.original) / d.original * 100).toFixed(0);
-            showTooltip(event, `${d.name}<br>Original: $${d.original}M<br>Current: $${d.current}M<br>Growth: +${growth}%`);
-        })
-        .on('mouseout', hideTooltip);
+        .attr('width', 0)
+        .attr('height', y.bandwidth() * 0.35)
+        .attr('fill', colors.red)
+        .attr('rx', 2)
+        .transition()
+        .duration(800)
+        .delay((d, i) => 200 + i * 100)
+        .attr('width', d => x(d.current));
 
-    // Value labels
-    svg.selectAll('.value-original')
+    // Contract labels
+    svg.selectAll('.contract-label')
         .data(data)
         .join('text')
-        .attr('x', d => x(d.original) + 5)
-        .attr('y', d => y(d.name) + y.bandwidth() / 4 + 4)
-        .attr('font-size', '11px')
-        .attr('font-family', 'Roboto Mono')
-        .attr('fill', colors.secondary)
-        .text(d => '$' + d.original + 'M');
+        .attr('x', -8)
+        .attr('y', d => y(d.name) + y.bandwidth()/2)
+        .attr('dy', '0.35em')
+        .attr('text-anchor', 'end')
+        .attr('font-family', fontFamily)
+        .attr('font-size', '12px')
+        .attr('font-weight', '500')
+        .attr('fill', colors.textSecondary)
+        .text(d => d.name);
 
+    // Value annotations - 538 style direct labels
     svg.selectAll('.value-current')
         .data(data)
         .join('text')
-        .attr('x', d => x(d.current) + 5)
-        .attr('y', d => y(d.name) + y.bandwidth() * 0.75 + 4)
-        .attr('font-size', '11px')
-        .attr('font-family', 'Roboto Mono')
-        .attr('font-weight', 'bold')
-        .attr('fill', colors.primary)
-        .text(d => '$' + d.current + 'M');
+        .attr('x', d => x(d.current) + 8)
+        .attr('y', d => y(d.name) + y.bandwidth() * 0.72)
+        .attr('dy', '0.35em')
+        .attr('font-family', fontFamily)
+        .attr('font-size', '12px')
+        .attr('font-weight', '700')
+        .attr('fill', colors.red)
+        .text(d => '$' + (d.current/1000).toFixed(1) + 'B')
+        .attr('opacity', 0)
+        .transition()
+        .delay((d, i) => 900 + i * 100)
+        .duration(300)
+        .attr('opacity', 1);
 
-    // Axes
-    svg.append('g')
-        .attr('transform', `translate(0,${height})`)
-        .call(d3.axisBottom(x).tickFormat(d => '$' + d/1000 + 'B').ticks(8))
-        .call(g => g.select('.domain').attr('stroke', colors.lightGray));
-
-    svg.append('g')
-        .call(d3.axisLeft(y))
-        .call(g => g.select('.domain').remove())
-        .selectAll('text')
-        .attr('font-size', '11px');
+    // Growth percentages
+    svg.selectAll('.growth-label')
+        .data(data)
+        .join('text')
+        .attr('x', d => x(d.current) + 55)
+        .attr('y', d => y(d.name) + y.bandwidth() * 0.72)
+        .attr('dy', '0.35em')
+        .attr('font-family', fontFamily)
+        .attr('font-size', '10px')
+        .attr('font-weight', '600')
+        .attr('fill', colors.textMuted)
+        .text(d => {
+            const growth = Math.round((d.current - d.original) / d.original * 100);
+            return '+' + growth + '%';
+        })
+        .attr('opacity', 0)
+        .transition()
+        .delay((d, i) => 1100 + i * 100)
+        .duration(300)
+        .attr('opacity', 1);
 
     // Legend
     const legend = svg.append('g')
-        .attr('transform', `translate(${width - 150}, -25)`);
+        .attr('transform', `translate(0, ${height + 25})`);
 
     legend.append('rect')
-        .attr('width', 15)
-        .attr('height', 10)
-        .attr('fill', colors.secondary);
+        .attr('width', 16)
+        .attr('height', 8)
+        .attr('fill', colors.border)
+        .attr('rx', 2);
+
     legend.append('text')
-        .attr('x', 20)
-        .attr('y', 9)
-        .attr('font-size', '11px')
-        .text('Original Bid');
+        .attr('x', 22)
+        .attr('y', 7)
+        .attr('font-family', fontFamily)
+        .attr('font-size', '10px')
+        .attr('fill', colors.textMuted)
+        .text('Original bid');
 
     legend.append('rect')
-        .attr('x', 90)
-        .attr('width', 15)
-        .attr('height', 10)
-        .attr('fill', colors.primary);
+        .attr('x', 100)
+        .attr('width', 16)
+        .attr('height', 8)
+        .attr('fill', colors.red)
+        .attr('rx', 2);
+
     legend.append('text')
-        .attr('x', 110)
-        .attr('y', 9)
-        .attr('font-size', '11px')
-        .text('Current');
+        .attr('x', 122)
+        .attr('y', 7)
+        .attr('font-family', fontFamily)
+        .attr('font-size', '10px')
+        .attr('fill', colors.textMuted)
+        .text('Current value');
+
+    // Source
+    container.append('div')
+        .attr('class', 'chart-source')
+        .html('Source: CHSRA contract data, LA Times');
 }
 
-// Route Map (Simplified visualization)
+// Route Map
 function createRouteMap() {
     const container = d3.select('#route-map');
+    if (container.empty()) return;
+    
     const containerWidth = container.node().getBoundingClientRect().width;
     const height = 500;
     
@@ -455,41 +621,30 @@ function createRouteMap() {
         .attr('width', containerWidth)
         .attr('height', height);
 
-    // Simplified California outline path
-    const californiaPath = "M50,50 L120,30 L180,60 L200,150 L220,200 L200,280 L180,350 L150,420 L100,450 L80,400 L60,300 L50,200 Z";
-
-    // Draw simplified state outline
-    svg.append('path')
-        .attr('d', californiaPath)
-        .attr('fill', '#f0f0f0')
-        .attr('stroke', '#ccc')
-        .attr('stroke-width', 2)
-        .attr('transform', `translate(${containerWidth/2 - 250}, 0) scale(2.5)`);
-
-    // Route segments (approximate positions)
+    // Simplified route visualization
     const segments = [
-        {name: 'San Francisco', y: 120, status: 'planned', label: 'SF'},
-        {name: 'San Jose', y: 180, status: 'planned', label: 'San Jose'},
-        {name: 'Gilroy', y: 220, status: 'design', label: 'Gilroy'},
-        {name: 'Merced', y: 260, status: 'design', label: 'Merced'},
-        {name: 'Madera', y: 290, status: 'progress', label: 'Madera'},
-        {name: 'Fresno', y: 320, status: 'complete', label: 'Fresno'},
-        {name: 'Kings/Tulare', y: 360, status: 'complete', label: 'Hanford'},
-        {name: 'Bakersfield', y: 410, status: 'design', label: 'Bakersfield'},
-        {name: 'Palmdale', y: 460, status: 'planned', label: 'Palmdale'},
-        {name: 'Los Angeles', y: 500, status: 'planned', label: 'LA'}
+        {name: 'San Francisco', y: 60, status: 'planned'},
+        {name: 'San Jose', y: 100, status: 'planned'},
+        {name: 'Gilroy', y: 140, status: 'design'},
+        {name: 'Merced', y: 190, status: 'design'},
+        {name: 'Madera', y: 230, status: 'progress'},
+        {name: 'Fresno', y: 280, status: 'complete'},
+        {name: 'Kings/Tulare', y: 330, status: 'complete'},
+        {name: 'Bakersfield', y: 380, status: 'progress'},
+        {name: 'Palmdale', y: 430, status: 'planned'},
+        {name: 'Los Angeles', y: 475, status: 'planned'}
     ];
 
-    const routeX = containerWidth / 2 + 50;
+    const routeX = containerWidth / 2;
 
-    // Draw route line segments
     const statusColors = {
         complete: colors.success,
         progress: colors.warning,
-        design: colors.secondary,
-        planned: colors.lightGray
+        design: colors.blue,
+        planned: '#CCCCCC'
     };
 
+    // Draw route segments with animation
     for (let i = 0; i < segments.length - 1; i++) {
         const current = segments[i];
         const next = segments[i + 1];
@@ -498,49 +653,70 @@ function createRouteMap() {
             .attr('x1', routeX)
             .attr('y1', current.y)
             .attr('x2', routeX)
-            .attr('y2', next.y)
+            .attr('y2', current.y)
             .attr('stroke', statusColors[next.status])
-            .attr('stroke-width', 6)
-            .attr('stroke-linecap', 'round');
+            .attr('stroke-width', 5)
+            .attr('stroke-linecap', 'round')
+            .transition()
+            .duration(400)
+            .delay(i * 80)
+            .attr('y2', next.y);
     }
 
-    // Draw station dots
-    segments.forEach(segment => {
-        svg.append('circle')
-            .attr('cx', routeX)
-            .attr('cy', segment.y)
-            .attr('r', 10)
+    // Station dots
+    segments.forEach((segment, i) => {
+        const g = svg.append('g')
+            .attr('transform', `translate(${routeX}, ${segment.y})`)
+            .attr('opacity', 0);
+
+        g.append('circle')
+            .attr('r', 8)
             .attr('fill', statusColors[segment.status])
             .attr('stroke', 'white')
-            .attr('stroke-width', 3);
+            .attr('stroke-width', 2);
 
-        svg.append('text')
-            .attr('x', routeX + 25)
-            .attr('y', segment.y + 5)
-            .attr('font-size', '13px')
-            .attr('font-family', 'Source Sans Pro')
-            .attr('fill', '#333')
-            .text(segment.label);
+        g.append('text')
+            .attr('x', 20)
+            .attr('dy', '0.35em')
+            .attr('font-family', fontFamily)
+            .attr('font-size', '12px')
+            .attr('font-weight', '500')
+            .attr('fill', colors.textSecondary)
+            .text(segment.name);
+
+        g.transition()
+            .duration(300)
+            .delay(i * 80 + 200)
+            .attr('opacity', 1);
     });
 
-    // IOS bracket
-    svg.append('rect')
-        .attr('x', routeX - 50)
-        .attr('y', 255)
-        .attr('width', 5)
-        .attr('height', 160)
-        .attr('fill', colors.primary)
+    // IOS bracket annotation
+    const iosGroup = svg.append('g')
+        .attr('opacity', 0);
+
+    iosGroup.append('rect')
+        .attr('x', routeX - 45)
+        .attr('y', 185)
+        .attr('width', 4)
+        .attr('height', 200)
+        .attr('fill', colors.red)
         .attr('rx', 2);
 
-    svg.append('text')
-        .attr('x', routeX - 70)
-        .attr('y', 335)
-        .attr('font-size', '12px')
-        .attr('font-family', 'Roboto Mono')
-        .attr('fill', colors.primary)
+    iosGroup.append('text')
+        .attr('x', routeX - 55)
+        .attr('y', 285)
+        .attr('font-family', fontFamily)
+        .attr('font-size', '11px')
+        .attr('font-weight', '600')
+        .attr('fill', colors.red)
         .attr('text-anchor', 'end')
-        .attr('transform', `rotate(-90, ${routeX - 70}, 335)`)
-        .text('Initial Operating Segment (171 mi)');
+        .attr('transform', `rotate(-90, ${routeX - 55}, 285)`)
+        .text('FUNDED: 171 miles');
+
+    iosGroup.transition()
+        .duration(400)
+        .delay(1200)
+        .attr('opacity', 1);
 }
 
 // Tooltip functions
@@ -554,24 +730,28 @@ function showTooltip(event, html) {
     }
     
     tooltip.html(html)
-        .style('left', (event.pageX + 15) + 'px')
-        .style('top', (event.pageY - 10) + 'px')
+        .style('left', (event.pageX + 12) + 'px')
+        .style('top', (event.pageY - 8) + 'px')
         .transition()
-        .duration(200)
+        .duration(150)
         .style('opacity', 1);
 }
 
 function hideTooltip() {
     d3.select('.tooltip')
         .transition()
-        .duration(300)
+        .duration(200)
         .style('opacity', 0);
 }
 
-// Responsive resize
+// Responsive resize with debounce
+let resizeTimer;
 window.addEventListener('resize', function() {
-    createCostChart();
-    createTimelineChart();
-    createContractorChart();
-    createRouteMap();
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+        createCostChart();
+        createTimelineChart();
+        createContractorChart();
+        createRouteMap();
+    }, 250);
 });
