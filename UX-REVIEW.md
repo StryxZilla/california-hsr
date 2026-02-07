@@ -402,3 +402,53 @@ You have the evidence. Now make it hit.
 
 *Review by: Senior UX/Data Journalism Editor*  
 *Date: February 2026*
+
+---
+
+## Editorialization Audit
+
+**Date:** February 2026  
+**Purpose:** Remove loaded language and let the data speak for itself. The numbers are damning enough—we don't need to editorialize.
+
+### Philosophy
+
+538-style data journalism presents facts clearly and trusts readers to draw conclusions. Editorializing undermines credibility by signaling bias. When you write "this is a disaster," readers wonder if you're cherry-picking. When you write "costs increased from $33B to $128B," they do the math themselves—and it hits harder.
+
+### Changes Made
+
+| Location | Before | After | Why |
+|----------|--------|-------|-----|
+| Page title | "California's $128 Billion Train to Somewhere" | "California High-Speed Rail: A Data Analysis" | "Train to Somewhere" is sarcastic wordplay |
+| H1 headline | "California's $128 Billion Train to Somewhere" | "California High-Speed Rail: Following the Money" | Same—removed snark |
+| Section header | "The Exploding Budget" | "Budget Growth Over Time" | "Exploding" is loaded; the chart shows the explosion |
+| Section header | "The Slipping Finish Line" | "Completion Date Revisions" | "Slipping" implies carelessness; let timeline show the story |
+| CP 2-3 note | "Low-ball design later deemed impossible" | "Design later required significant changes" | "Low-ball" is accusatory; "impossible" is hyperbole |
+| CP 4 note | "Completed Jan 2025. Least troubled package." | "Completed Jan 2025." | "Least troubled" is editorial opinion |
+| Section header | "The Federal Funding Rollercoaster" | "Federal Funding History" | "Rollercoaster" editorializes the volatility |
+| Summary card | "Reality (2026)" | "Current Status (2026)" | "Reality" frames promises as lies—let contrast speak |
+
+### What We Kept (and why)
+
+- **"Zero passengers"** — This is a fact, not an opinion
+- **The direct quote "Train to Nowhere"** from DOT — It's attributed to them, not us
+- **Comparisons** ("18 Golden Gate Bridges") — These are factual equivalencies, not editorializing
+- **The basic structure contrasting promises vs. status** — Factual comparison is fair journalism
+
+### Guidance for Future Data Viz Projects
+
+1. **Test for bias:** Would this language appear in a quarterly report? If yes, it's probably neutral.
+2. **Avoid loaded adjectives:** "exploding," "bloated," "troubled," "disastrous," "scandal"
+3. **Let numbers do the work:** Instead of "costs skyrocketed," write "costs increased 287%"
+4. **Attribution matters:** If quoting a source's opinion, attribute it. Don't adopt their framing.
+5. **Contrast, don't editorialize:** "Promised $33B, current estimate $128B" is neutral. "Broken promises" is editorial.
+6. **Headers should describe, not judge:** "Budget Changes" not "Budget Disaster"
+7. **When in doubt, flatten:** Ask "could a defender of this project object to this wording?" If yes, neutralize.
+
+### Note on the UX Review Above
+
+The UX review (written before this audit) suggested making the content *more* emotional and angry. This is a valid stylistic choice for advocacy journalism, but conflicts with 538-style neutral presentation. 
+
+**The decision:** We're choosing credibility over punch. A neutral presentation is more persuasive to skeptics, more shareable across political lines, and more defensible as journalism rather than advocacy. The data is shocking enough without adjectives.
+
+*Audit by: Arlo (Subagent)*  
+*Date: February 2026*
