@@ -15,7 +15,15 @@
         <div class="container">
             <p class="label">DATA INVESTIGATION</p>
             <h1>California High-Speed Rail: Following the Money</h1>
-            <p class="subtitle">The most expensive infrastructure project in American history was supposed to cost $33 billion and be done by 2020. It's 2026, and zero passengers have ridden it. Here's where the money went.</p>
+            
+            <div class="hero-stats-container">
+                <div class="hero-spent">$13.8 BILLION</div>
+                <div class="hero-spent-label">Spent So Far</div>
+                <div class="hero-zero">0</div>
+                <div class="hero-zero-label">Passengers Carried</div>
+            </div>
+            
+            <p class="subtitle">The most expensive infrastructure project in American history was supposed to cost $33 billion and be done by 2020. It's 2026. The money is spent. The train isn't running.</p>
             <div class="byline">
                 <span>Updated February 2026</span>
                 <span>•</span>
@@ -52,14 +60,14 @@
         <!-- The Cost Story -->
         <section id="cost-evolution" class="section">
             <h2>Budget Growth Over Time</h2>
-            <p class="section-intro">When California voters approved Proposition 1A in 2008, they were promised a bullet train from San Francisco to Los Angeles for <strong>$33 billion</strong>. That number has nearly <strong>quadrupled</strong>.</p>
+            <p class="section-intro">Voters approved $33 billion in 2008. By 2024, the estimate hit $128 billion. A 4x increase.</p>
             
             <div class="chart-container">
                 <h3>Phase 1 Cost Estimates Over Time</h3>
                 <div id="cost-chart"></div>
                 <div class="chart-annotation">
                     <div class="annotation-line"></div>
-                    <p>By 2024, the high-end estimate reached <strong>$128 billion</strong>—enough to give every Californian about $3,200, or to build approximately 4 new Bay Bridges.</p>
+                    <p><strong>$128 billion = $3,200 per Californian.</strong> For a train none of them can ride yet.</p>
                 </div>
             </div>
 
@@ -94,10 +102,14 @@
             </div>
         </section>
 
+        <div class="scroll-hook">
+            <a href="#timeline">When will it actually be finished? ↓</a>
+        </div>
+
         <!-- Timeline Section -->
         <section id="timeline" class="section">
             <h2>Completion Date Revisions</h2>
-            <p class="section-intro">Each business plan pushed the completion date further into the future. The original promise of 2020 service has slipped by at least <strong>13 years</strong>.</p>
+            <p class="section-intro">Original promise: 2020. Current estimate: 2033. Full line: "As funding becomes available." That's 13+ years of delay.</p>
             
             <div class="chart-container">
                 <h3>Projected Completion Dates Over Time</h3>
@@ -165,10 +177,14 @@
             </div>
         </section>
 
+        <div class="scroll-hook">
+            <a href="#progress">What did $13.8 billion actually build? ↓</a>
+        </div>
+
         <!-- What's Been Built -->
         <section id="progress" class="section">
             <h2>What's Actually Been Built</h2>
-            <p class="section-intro">After 10+ years of construction and $13.8 billion spent, here's what exists on the ground.</p>
+            <p class="section-intro">After 10+ years of construction and $13.8 billion spent: 70 miles of track in the Central Valley.</p>
 
             <div class="progress-overview">
                 <div class="progress-stat">
@@ -187,7 +203,16 @@
 
             <div class="map-container">
                 <h3>Construction Status Map</h3>
-                <div id="route-map"></div>
+                <div id="route-map">
+                    <div class="map-annotation funded">
+                        <strong>The part that's funded</strong>
+                        Merced → Bakersfield (171 mi)
+                    </div>
+                    <div class="map-annotation unfunded">
+                        <strong>Everything else: TBD</strong>
+                        SF & LA connections unfunded
+                    </div>
+                </div>
                 <div class="map-legend">
                     <div class="legend-item">
                         <span class="legend-color complete"></span>
@@ -208,30 +233,16 @@
                 </div>
             </div>
 
-            <div class="structures-grid">
-                <h3>Structures Status (119-mile Active Construction Zone)</h3>
-                <div class="structure-stats">
-                    <div class="structure-stat">
-                        <div class="structure-number">54</div>
-                        <div class="structure-label">Complete</div>
-                    </div>
-                    <div class="structure-stat">
-                        <div class="structure-number">32</div>
-                        <div class="structure-label">Under Construction</div>
-                    </div>
-                    <div class="structure-stat">
-                        <div class="structure-number">6</div>
-                        <div class="structure-label">Not Started</div>
-                    </div>
-                </div>
-                <a href="https://en.wikipedia.org/wiki/California_High-Speed_Rail" target="_blank" class="source-link">Source: Wikipedia citing CHSRA August 2025 report ↗</a>
-            </div>
         </section>
+
+        <div class="scroll-hook">
+            <a href="#contractors">Where did the money actually go? ↓</a>
+        </div>
 
         <!-- Who Got the Money -->
         <section id="contractors" class="section">
             <h2>Who Got the Money</h2>
-            <p class="section-intro">The Central Valley construction was divided into "construction packages" awarded to large contracting consortia. Here's how those contracts have grown.</p>
+            <p class="section-intro">Construction divided into "packages" awarded to contracting consortia. One contractor bid $985M. They've billed $3.55B.</p>
 
             <div class="contractor-chart-container">
                 <h3>Contract Values: Original Bid vs. Current</h3>
@@ -346,10 +357,14 @@
             </div>
         </section>
 
+        <div class="scroll-hook">
+            <a href="#funding">What about federal funding? ↓</a>
+        </div>
+
         <!-- Federal Funding Drama -->
         <section id="funding" class="section">
             <h2>Federal Funding History</h2>
-            <p class="section-intro">The project has been a political football between Washington and Sacramento, with billions in grants awarded, revoked, and disputed.</p>
+            <p class="section-intro">Washington gave $8B. Then took $5B back. The project has been a political flashpoint between administrations.</p>
 
             <div class="funding-timeline">
                 <div class="funding-event positive">
@@ -404,6 +419,10 @@
             </div>
         </section>
 
+        <div class="scroll-hook">
+            <a href="#summary">The bottom line ↓</a>
+        </div>
+
         <!-- The Bottom Line -->
         <section id="summary" class="section summary">
             <h2>The Bottom Line</h2>
@@ -411,19 +430,19 @@
                 <div class="summary-card">
                     <h4>What Voters Were Promised (2008)</h4>
                     <ul>
-                        <li>SF to LA in 2 hours 40 minutes</li>
-                        <li>$33 billion total cost</li>
-                        <li>Complete by 2020</li>
-                        <li>No operating subsidies needed</li>
+                        <li class="promise-item broken">SF to LA in 2 hours 40 minutes</li>
+                        <li class="promise-item broken">$33 billion total cost</li>
+                        <li class="promise-item broken">Complete by 2020</li>
+                        <li class="promise-item broken">No operating subsidies needed</li>
                     </ul>
                 </div>
                 <div class="summary-card reality">
                     <h4>Current Status (2026)</h4>
                     <ul>
-                        <li>Zero passengers transported</li>
-                        <li>$89-128 billion projected cost</li>
-                        <li>Maybe Merced-Bakersfield by 2033</li>
-                        <li>SF-LA date: "TBD"</li>
+                        <li class="reality-item">Passengers: <strong>0</strong></li>
+                        <li class="reality-item">Projected cost: <strong>$89-128 billion</strong></li>
+                        <li class="reality-item">Maybe Merced-Bakersfield by <strong>2033</strong></li>
+                        <li class="reality-item">SF-LA completion: <strong>TBD</strong></li>
                     </ul>
                 </div>
             </div>
@@ -434,31 +453,18 @@
             </div>
         </section>
 
-        <!-- Sources -->
-        <section id="sources" class="section">
-            <h2>Sources & Methodology</h2>
-            <p>All data in this visualization comes from official sources and reputable news organizations. Every figure has a linked source for verification.</p>
-            
-            <div class="sources-list">
-                <h4>Primary Sources</h4>
-                <ul>
-                    <li><a href="https://hsr.ca.gov/" target="_blank">California High-Speed Rail Authority Official Website</a></li>
-                    <li><a href="https://hsr.ca.gov/about/high-speed-rail-business-plans/2024-business-plan/" target="_blank">2024 Business Plan</a></li>
-                    <li><a href="https://hsr.ca.gov/wp-content/uploads/2025/03/2025-Project-Update-Report-FINAL-030125-A11Y.pdf" target="_blank">2025 Project Update Report</a></li>
-                    <li><a href="https://en.wikipedia.org/wiki/California_High-Speed_Rail" target="_blank">Wikipedia: California High-Speed Rail</a></li>
-                    <li><a href="https://en.wikipedia.org/wiki/Construction_of_California_High-Speed_Rail" target="_blank">Wikipedia: Construction of California High-Speed Rail</a></li>
-                </ul>
-                
-                <h4>News & Investigations</h4>
-                <ul>
-                    <li><a href="https://www.latimes.com/california/story/2021-02-22/california-bullet-train-dragados-design-changes" target="_blank">LA Times: Cost-saving designs backfire (2021)</a></li>
-                    <li><a href="https://www.latimes.com/california/story/2021-10-08/california-high-speed-rail-faces-new-cost-overruns" target="_blank">LA Times: New cost overruns (2021)</a></li>
-                    <li><a href="https://www.transportation.gov/briefing-room/trumps-transportation-secretary-sean-p-duffy-pulls-plug-4b-california-high-speed" target="_blank">DOT: Federal funding termination (2025)</a></li>
-                    <li><a href="https://calmatters.org/politics/2026/02/california-high-speed-rail-record-exemption/" target="_blank">CalMatters: Record exemption bill (2026)</a></li>
-                </ul>
-            </div>
-        </section>
     </main>
+
+    <!-- Condensed Sources Footer -->
+    <div class="sources-footer">
+        <p><strong>Sources:</strong> All figures linked to primary sources throughout. Data from CHSRA official reports, business plans, and reputable news organizations.</p>
+        <div class="sources-links">
+            <a href="https://hsr.ca.gov/" target="_blank">CHSRA Official Site</a>
+            <a href="https://hsr.ca.gov/about/high-speed-rail-business-plans/2024-business-plan/" target="_blank">2024 Business Plan</a>
+            <a href="https://en.wikipedia.org/wiki/California_High-Speed_Rail" target="_blank">Wikipedia</a>
+            <a href="https://www.latimes.com/california/story/2021-02-22/california-bullet-train-dragados-design-changes" target="_blank">LA Times Investigations</a>
+        </div>
+    </div>
 
     <footer>
         <div class="container">

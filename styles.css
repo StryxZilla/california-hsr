@@ -702,6 +702,173 @@ footer a {
     color: rgba(255,255,255,0.5);
 }
 
+/* UX Improvements - Mega Stats */
+.mega-stat {
+    font-family: var(--font-mono);
+    font-size: 5rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.hero-zero {
+    font-family: var(--font-mono);
+    font-size: 8rem;
+    font-weight: 900;
+    color: #DC3545;
+    text-shadow: 0 4px 30px rgba(220, 53, 69, 0.4);
+    line-height: 1;
+}
+
+.hero-stats-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin: 40px 0;
+}
+
+.hero-spent {
+    font-family: var(--font-mono);
+    font-size: 4rem;
+    font-weight: 900;
+    color: #FFC107;
+    text-shadow: 0 4px 20px rgba(255, 193, 7, 0.3);
+}
+
+.hero-spent-label {
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.hero-zero-label {
+    font-size: 1.5rem;
+    color: rgba(255,255,255,0.9);
+    font-weight: 600;
+}
+
+/* Promise items with broken marks */
+.promise-item.broken {
+    position: relative;
+}
+
+.promise-item.broken::before {
+    content: "❌";
+    margin-right: 8px;
+}
+
+.reality-item {
+    font-weight: 600;
+}
+
+.reality-item strong {
+    color: var(--danger-red);
+}
+
+/* Scroll hooks between sections */
+.scroll-hook {
+    text-align: center;
+    padding: 50px 20px;
+    font-size: 1.3rem;
+    color: var(--secondary-blue);
+    cursor: pointer;
+    background: linear-gradient(180deg, transparent 0%, rgba(0,102,204,0.05) 50%, transparent 100%);
+    transition: all 0.3s;
+}
+
+.scroll-hook:hover {
+    color: #004c99;
+    background: linear-gradient(180deg, transparent 0%, rgba(0,102,204,0.1) 50%, transparent 100%);
+}
+
+.scroll-hook a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.scroll-hook a:hover {
+    text-decoration: underline;
+}
+
+/* Map annotations */
+.map-annotation {
+    position: absolute;
+    background: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    font-size: 0.9rem;
+    max-width: 200px;
+    z-index: 10;
+}
+
+.map-annotation.funded {
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 4px solid var(--success-green);
+}
+
+.map-annotation.unfunded {
+    top: 15%;
+    right: 10%;
+    border-left: 4px solid var(--text-light);
+}
+
+.map-annotation strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Enhanced reality card */
+.summary-card.reality {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+    border-left: 6px solid #DC3545;
+    box-shadow: 0 4px 20px rgba(220, 53, 69, 0.15);
+}
+
+/* Condensed sources footer */
+.sources-footer {
+    background: var(--bg-light);
+    padding: 30px 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-gray);
+}
+
+.sources-footer a {
+    color: var(--secondary-blue);
+    text-decoration: none;
+}
+
+.sources-footer a:hover {
+    text-decoration: underline;
+}
+
+.sources-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* Responsive mega stats */
+@media (max-width: 768px) {
+    .hero-zero {
+        font-size: 5rem;
+    }
+    
+    .hero-spent {
+        font-size: 2.5rem;
+    }
+    
+    .mega-stat {
+        font-size: 3rem;
+    }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .hero {
